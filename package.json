@@ -38,7 +38,7 @@
   },
   "homepage": "https://github.com/joytocode/lighthouse-lambda#readme",
   "dependencies": {
-    "@serverless-chrome/lambda": "^1.0.0-54",
+    "@serverless-chrome/lambda": "git+ssh://git@github.com/ezoic/serverless-chrome-dist.git",
     "lighthouse": "^3.0.3"
   },
   "devDependencies": {

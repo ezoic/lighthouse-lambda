@@ -22,7 +22,7 @@ fi
 
 git fetch origin 'refs/tags/*:refs/tags/*'
 RAW_TAG="$(git describe --exact-match --tags 2> /dev/null || true)"
-TAG = ${RAW_TAG//v}
+TAG=${RAW_TAG//v}
 echo "Release tag found: $TAG"
 
 if [ -z "$TAG" ]; then
@@ -51,6 +51,7 @@ create_release_draft() {
   local ouput
   # shellcheck disable=SC2059
   if output=$(curl \
+      --silent
       --request POST \
       --header "Authorization: token $GITHUB_TOKEN" \
       --header 'Content-Type: application/json' \
@@ -65,17 +66,19 @@ create_release_draft() {
 upload_release_asset() {
   # shellcheck disable=SC2059
   curl \
+    --silent
     --request POST \
     --header "Authorization: token $GITHUB_TOKEN" \
     --header 'Content-Type: application/zip' \
     --data-binary "@$1" \
-    "${UPLOAD_URL_TEMPLATE%\{*}?name=$2&label=$1" \
+    "${UPLOAD_URL_TEMPLATE%\{*}?name=$1&label=$2" \
     > /dev/null
 }
 
 update_release_body() {
   # shellcheck disable=SC2059
   curl \
+    --silent
     --request PATCH \
     --header "Authorization: token $GITHUB_TOKEN" \
     --header 'Content-Type: application/json' \
@@ -87,6 +90,7 @@ update_release_body() {
 publish_release() {
   # shellcheck disable=SC2059
   curl \
+    --slient
     --request PATCH \
     --header "Authorization: token $GITHUB_TOKEN" \
     --header 'Content-Type: application/json' \
