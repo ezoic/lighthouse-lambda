@@ -30,6 +30,8 @@ if [ -z "$TAG" ]; then
   exit
 fi
 
+npm pack
+
 # Check if this is a pre-release version (denoted by a hyphen):
 if [ "${TAG#*-}" != "$TAG" ]; then
   PRE=true
