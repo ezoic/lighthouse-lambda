@@ -52,12 +52,14 @@ create_release_draft() {
   # shellcheck disable=SC2034
   local ouput
   # shellcheck disable=SC2059
+  RELEASE_PAYLOAD=$(printf "$RELEASE_TEMPLATE" "v$TAG" "$TAG" "$PRE" true)
+  echo $RELEASE_PAYLOAD
   if output=$(curl \
-      --silent
+      --silent \
       --request POST \
       --header "Authorization: token $GITHUB_TOKEN" \
       --header 'Content-Type: application/json' \
-      --data "$(printf "$RELEASE_TEMPLATE" "$TAG" "$TAG" "$PRE" true)" \
+      --data "$RELEASE_PAYLOAD" \
       "https://api.github.com/repos/$GITHUB_ORG/$GITHUB_REPO/releases");
   then
     RELEASE_ID=$(echo "$output" | jq -re '.id')
@@ -68,7 +70,7 @@ create_release_draft() {
 upload_release_asset() {
   # shellcheck disable=SC2059
   curl \
-    --silent
+    --silent \
     --request POST \
     --header "Authorization: token $GITHUB_TOKEN" \
     --header 'Content-Type: application/zip' \
@@ -80,7 +82,7 @@ upload_release_asset() {
 update_release_body() {
   # shellcheck disable=SC2059
   curl \
-    --silent
+    --silent \
     --request PATCH \
     --header "Authorization: token $GITHUB_TOKEN" \
     --header 'Content-Type: application/json' \
@@ -92,7 +94,7 @@ update_release_body() {
 publish_release() {
   # shellcheck disable=SC2059
   curl \
-    --slient
+    --silent \
     --request PATCH \
     --header "Authorization: token $GITHUB_TOKEN" \
     --header 'Content-Type: application/json' \
@@ -104,7 +106,7 @@ publish_release() {
 echo "Creating release draft $TAG"
 create_release_draft
 
-FILE="$PROJECT_DIRECTORY/lighthouse-lambda-$TAG.tgz"
+FILE="lighthouse-lambda-$TAG.tgz"
 echo "Uploading $FILE to $GITHUB_REPO"
 upload_release_asset "$FILE" "lighthouse-lambda-$TAG.tgz"
 
